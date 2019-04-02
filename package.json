@@ -1,0 +1,30 @@
+{
+  "name": "@jeffriggle/ipc-bridge-server",
+  "version": "1.0.0",
+  "description": "Communicate bridge server for electrons ipc",
+  "main": "./src/server.js",
+  "scripts": {
+    "test": "mocha ./src/spec",
+    "build": "webpack --mode=production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JeffreyRiggle/ipc-bridge-server.git"
+  },
+  "author": "<JeffreyRiggle@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JeffreyRiggle/ipc-bridge-server/issues"
+  },
+  "homepage": "https://github.com/JeffreyRiggle/ipc-bridge-server#readme",
+  "devDependencies": {
+    "mock-require": "^3.0.3",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "dependencies": {
+    "chai": "^4.2.0",
+    "electron": "^4.1.3",
+    "mocha": "^6.0.2"
+  }
+}
