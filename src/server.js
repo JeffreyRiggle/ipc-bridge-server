@@ -40,7 +40,12 @@ const start = () => {
         if ((data || data === false) && message.correlationId) {
             event.sender.send(`cid${message.correlationId}`, data);
         }
-    })
+    });
+
+    ipcMain.on('healthcheck', (event) => {
+        console.log('healthcheck issued');
+        event.sender.send('heartbeat');
+    });
 }
 
 const registerEvent = (eventId, func) => {

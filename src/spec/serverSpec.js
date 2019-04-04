@@ -36,6 +36,30 @@ describe('ipc bridge server', function() {
             expect(electronMock.invocationMap.get('subscribe')).not.to.be.undefined;
         });
 
+        it('Should register healthcheck', () => {
+            expect(electronMock.invocationMap.get('healthcheck')).not.to.be.undefined;
+        });
+
+        describe('when a healthcheck is issued', () => {
+            let eventId;
+
+            beforeEach(() => {
+                evt = {
+                    sender: {
+                        send: function(id) {
+                            eventId = id;
+                        }
+                    }
+                };
+
+                electronMock.invocationMap.get('healthcheck')(evt);
+            });
+
+            it('should issue a heartbeat', () => {
+                expect(eventId).to.equal('heartbeat');
+            });
+        });
+
         describe('when event is registered', () => {
             beforeEach(() => {
                 invoked = 0;
