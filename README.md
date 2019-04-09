@@ -44,5 +44,8 @@ let data = {};
 broadcast('customeventname', data);
 ```
 
+## Example
+Some simple examples of this can be found at [ipc-bridge](https://github.com/JeffreyRiggle/ipc-bridge)
+
 ## License
  ipc-bridge-server is released under [MIT](./LICENSE)
