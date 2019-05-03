@@ -3,6 +3,14 @@ const {ipcMain} = require('electron');
 let events = new Map();
 let subscriptions = new Map();
 
+function isPromise(value) {
+    if (value instanceof Promise) {
+        return true;
+    }
+
+    return value && (typeof value.then === 'function');
+}
+
 const start = () => {
     ipcMain.on('subscribe', (event, id) => {
         if (!subscriptions.get(id)) {
@@ -37,9 +45,22 @@ const start = () => {
         }
 
         let data = evt(event, message.data);
-        if ((data || data === false) && message.correlationId) {
-            event.sender.send(`cid${message.correlationId}`, data);
+
+        if (!message.correlationId) {
+            return;
         }
+
+        let cidEvent = `cid${message.correlationId}`;
+        if (!isPromise(data)) {
+            event.sender.send(cidEvent, data);
+            return;
+        }
+
+        data.then(result => {
+            event.sender.send(cidEvent, result);
+        }).catch(err => {
+            event.sender.send(cidEvent, err);
+        });
     });
 
     ipcMain.on('healthcheck', (event) => {

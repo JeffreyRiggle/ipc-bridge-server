@@ -70,7 +70,13 @@ describe('ipc bridge server', function() {
 
             describe('when request is sent', () => {
                 beforeEach(() => {
-                    electronMock.invocationMap.get('request')('request', {id: 'test1', correlationId: '1'});
+                    evt = {
+                        sender: {
+                            send: () => {}
+                        }
+                    };
+
+                    electronMock.invocationMap.get('request')(evt, {id: 'test1', correlationId: '1'});
                 });
 
                 it('should handle the request', () => {
@@ -93,7 +99,7 @@ describe('ipc bridge server', function() {
         describe('when event is registered with return value', () => {
             beforeEach(() => {
                 invoked = 0;
-                registerEvent('test1', () => {
+                registerEvent('test2', () => {
                     invoked++;
                     return {
                         correlationId: invoked,
@@ -112,7 +118,41 @@ describe('ipc bridge server', function() {
                         }
                     };
 
-                    electronMock.invocationMap.get('request')(evt, {id: 'test1', correlationId: '1'});
+                    electronMock.invocationMap.get('request')(evt, {id: 'test2', correlationId: '1'});
+                });
+
+                it('should handle the request', () => {
+                    expect(invoked).to.equal(1);
+                });
+
+                it('Should return a value', () => {
+                    expect(result).to.equal('result');
+                });
+            });
+        });
+
+        describe('when event is registered with a promise return value', () => {
+            beforeEach(() => {
+                invoked = 0;
+                registerEvent('testPromise', () => {
+                    invoked++;
+                    return new Promise((resolve, reject) => {
+                        resolve('result');
+                    });
+                });
+            });
+
+            describe('when request is sent', () => {
+                beforeEach(() => {
+                    evt = {
+                        sender: {
+                            send: function(id, data) {
+                                result = data;
+                            }
+                        }
+                    };
+
+                    electronMock.invocationMap.get('request')(evt, {id: 'testPromise', correlationId: '1'});
                 });
 
                 it('should handle the request', () => {
@@ -128,7 +168,7 @@ describe('ipc bridge server', function() {
         describe('when a subscription is added', () => {
             beforeEach(() => {
                 invoked = 0;
-                registerEvent('test1', () => {
+                registerEvent('testSub', () => {
                     invoked++;
                     return {
                         correlationId: invoked,
@@ -144,12 +184,12 @@ describe('ipc bridge server', function() {
                     }
                 };
 
-                electronMock.invocationMap.get('subscribe')(evt, 'test1');
+                electronMock.invocationMap.get('subscribe')(evt, 'testSub');
             });
 
             describe('and a message is broadcast', () => {
                 beforeEach(() => {
-                    broadcast('test1', {
+                    broadcast('testSub', {
                         data: 'result2'
                     });
                 });
@@ -165,12 +205,12 @@ describe('ipc bridge server', function() {
 
             describe('when subscription is removed', () => {
                 beforeEach(() => {
-                    electronMock.invocationMap.get('unsubscribe')(evt, 'test1');
+                    electronMock.invocationMap.get('unsubscribe')(evt, 'testSub');
                 });
 
                 describe('and message is broadcast', () => {
                     beforeEach(() => {
-                        broadcast('test1', {
+                        broadcast('testSub', {
                             data: 'result2'
                         });
                     });
