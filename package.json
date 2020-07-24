@@ -1,6 +1,6 @@
 {
   "name": "@jeffriggle/ipc-bridge-server",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Communicate bridge server for electrons ipc",
   "main": "./index.js",
   "scripts": {
@@ -18,13 +18,13 @@
   },
   "homepage": "https://github.com/JeffreyRiggle/ipc-bridge-server#readme",
   "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.0.2",
     "mock-require": "^3.0.3",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
-    "chai": "^4.2.0",
-    "electron": "^4.1.3",
-    "mocha": "^6.0.2"
+    "electron": "^7.2.4"
   }
 }
